@@ -2,16 +2,12 @@
 
 /* Template Name: Contact */
 
-
-
-// template file for rooms
+// template file for contact
 // =============================================================================
 
-get_partial('header');
+get_part('header');
 
+get_part('navbar');
 
-
-
-
-get_partial('footer');
+get_part('footer');
 ?>

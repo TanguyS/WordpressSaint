@@ -10,7 +10,7 @@ module.exports = function(grunt) {
                   join: true
                 },
                 files: {
-                  'core/assets/js/coffee.js': ['core/assets/js/*.coffee'] // concat then compile into single file
+                  'assets/js/coffee.js': ['assets/js/*.coffee'] // concat then compile into single file
                 }
             },
             compileAdmin: {
@@ -18,7 +18,7 @@ module.exports = function(grunt) {
                   join: true
                 },
                 files: {
-                  'js/admin.js': ['core/assets/js/admin/*.coffee'] // concat then compile into single file
+                  'js/admin.js': ['assets/js/admin/*.coffee'] // concat then compile into single file
                 }
             },
         },
@@ -26,14 +26,8 @@ module.exports = function(grunt) {
         concat: {   
             dist: {
                 src: [
-                    'core/assets/js/vendor/modernizr-2.6.2.min.js',
-                    'core/assets/js/vendor/jquery-1.10.2.min.js',
-                    'core/assets/js/vendor/bootstrap.min.js',
-                    'core/assets/js/vendor/jquery.backstretch.js',
-                    'core/assets/js/vendor/background.js',
-                    'core/assets/js/vendor/imagesloaded.pkgd.min.js',
-                    'core/assets/js/vendor/masonry.pkgd.min.js',
-                    'core/assets/js/*.js'
+                    'assets/js/vendor/*.js',
+                    'assets/js/*.js'
                 ],
                 dest: 'js/production.js',
             }
@@ -50,7 +44,7 @@ module.exports = function(grunt) {
             dynamic: {
                 files: [{
                     expand: true,
-                    cwd: 'core/assets/images/',
+                    cwd: 'assets/images/',
                     src: ['**/*.{png,jpg,gif}'],
                     dest: 'img/'
                 }]
@@ -63,7 +57,7 @@ module.exports = function(grunt) {
                     style: 'compressed'
                 },
                 files: {
-                    'css/production.css': 'core/assets/css/main.scss'
+                    'css/production.css': 'assets/css/main.scss'
                 }
             } 
         },
@@ -73,14 +67,14 @@ module.exports = function(grunt) {
                 livereload: true,
             },
             scripts: {
-                files: ['core/assets/js/*.js', 'core/assets/js/*.coffee', 'core/assets/js/admin/*.coffee'],
+                files: ['assets/js/*.js', 'assets/js/*.coffee', 'assets/js/admin/*.coffee'],
                 tasks: ['coffee', 'concat', 'uglify'],
                 options: {
                     spawn: false,
                 },
             },
             css: {
-                files: ['core/assets/css/*.scss', 'core/assets/css/vendor/bootstrap/*.scss'],
+                files: ['assets/css/*.scss', 'assets/css/vendor/bootstrap/*.scss'],
                 tasks: ['sass'],
                 options: {
                     spawn: false,

@@ -3,9 +3,9 @@
 // template file for regular pages
 // =============================================================================
 
-get_partial('header');
+get_part('header');
 
+get_part('navbar');
 
-
-get_partial('footer');
+get_part('footer');
 ?>

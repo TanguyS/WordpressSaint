@@ -1,0 +1,132 @@
+/************************************
+          MINIMALECT 0.9
+  A minimalistic select replacement
+
+ jQuery 1.7+ required.
+ Developed by @groenroos
+ http://www.groenroos.fi
+
+ Github: http://git.io/Xedg9w
+
+ Licensed under the MIT license.
+
+************************************/
+
+.minict_wrapper {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  &:after {
+    content: "\25BC";
+    display: block;
+    position: absolute;
+    height: 33px;
+    width: 33px;
+    height: 2.1rem;
+    width: 2.1rem;
+    top: 15px;
+    right: 15px;
+    font-size: 10px;
+    font-size: 0.6rem;
+    line-height: 32px;
+    line-height: 1.9rem;
+    text-align: center;
+  }
+  &.active:after {
+    content: "\25B2";
+  }
+  span {
+    display: block;
+    border: 0;
+    outline: none;
+    background: none;
+    font-size: 16px;
+    font-size: 1rem;
+    height: 32px;
+    height: 2.0rem;
+    line-height: 23px;
+    line-height: 1.5rem;
+    padding: 4px 53px 0 6px;
+    padding: 4px 3.4rem 0 0.4rem;
+    cursor: default;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &:empty:before {
+      content: attr(data-placeholder);
+      line-height: 23px;
+      line-height: 1.5rem;
+    }
+  }
+  ul {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0 -1px;
+    position: absolute;
+    top: 33px;
+    top: 2.0rem;
+    left: 0;
+    max-height: 350px;
+    max-height: 22rem;
+    overflow-y: auto;
+    z-index: 999999;
+    li {
+      list-style: none;
+      font-size: 1rem;
+      cursor: pointer;
+      &.minict_group {
+        font-weight: bold;
+        cursor: default;
+      }
+      &.minict_empty {
+        display: none;
+        text-align: center;
+        font-size: 14px;
+        font-size: 0.9rem;
+        height: 55px;
+        height: 3.5rem;
+        line-height: 50px;
+        line-height: 3.3rem;
+      }
+      &.disabled {
+        cursor: default;
+      }
+      &.hidden {
+        display: none;
+      }
+    }
+  }
+  .minict_reset {
+    bottom: 0;
+    display: none;
+    font-size: 18px;
+    font-size: 1.1rem;
+    line-height: 30px;
+    line-height: 1.9rem;
+    position: absolute;
+    right: 35px;
+    right: 2.2rem;
+    text-align: center;
+    top: 0;
+    text-decoration: none;
+    width: 20px;
+    width: 1.2rem;
+    -webkit-transition: all 0.35s ease-in-out;
+    transition: all 0.35s ease-in-out;
+    &:hover {
+      -webkit-transition: all 0.15s ease-in-out;
+      transition: all 0.15s ease-in-out;
+    }
+  }
+  &.disabled .minict_reset {
+    display: none;
+  }
+}
