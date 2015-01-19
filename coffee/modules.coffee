@@ -427,5 +427,18 @@ jQuery(document).ready ($) ->
 		fillWidth()
 		return
 	
+
+	# masonry
+	###########################################################################################
+
+	if $(".masonry").length isnt 0
+		$(".masonry").each ->
+			$(this).imagesLoaded =>
+			    $(this).masonry
+				    itemSelector: 'article'
+				return
+			return
+
+			
 	
 	return

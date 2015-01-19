@@ -6,23 +6,11 @@
 $bootstrap-sass-asset-helper: false;
 @import "vendor/bootstrap/bootstrap";
 @import "vendor/fontawesome";
-@import "vendor/minimalect";
-@import "vendor/pikaday";
 @import "colors";
 @import "fonts";
 
 @import "commons";
 
-@import "contact";
-@import "gallery";
-@import "home";
-@import "page";
-@import "press";
-@import "promo";
-@import "rooms";
-@import "seminar";
-@import "services";
-@import "hotel";
 
 /* ==========================================================================
    WordPress Generated Classes

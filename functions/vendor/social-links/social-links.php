@@ -17,7 +17,7 @@ class Social_links {
 	private $path;
 
     public function __construct(){
-    	$this->path = get_template_directory_uri() . '/functions/vendor/social-links';
+    	$this->path = get_template_directory_uri() . '/core/functions/vendor/social-links';
 
         if (is_admin()) {
         	$this->prefix = 'social_links';
@@ -64,7 +64,8 @@ class Social_links {
 			'google' => 'Google +',
 			'youtube' => 'Youtube',
 			'tumblr' => 'Tumblr',
-			'pinterest' => 'Pinterest'
+			'pinterest' => 'Pinterest',
+			'foursquare' => 'Foursquare'
 		);
 
     }
@@ -165,6 +166,8 @@ if (!function_exists('get_social_links')) {
 
 		if ( defined(ICL_LANGUAGE_CODE) )
 			$current_language = ICL_LANGUAGE_CODE;
+		else if (function_exists('pll_current_language'))
+			$current_language = pll_current_language();
 		else
 			$current_language = 'fr';
 

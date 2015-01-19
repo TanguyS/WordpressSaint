@@ -19,6 +19,7 @@ function st_encode_email($e) {
 
 // send mail
 // =============================================================================
+add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
 
 function st_send_mail($txt, $to, $subject, $from, $from_addr, $cc="", $bcc="") {
 	
@@ -37,18 +38,12 @@ function st_send_mail($txt, $to, $subject, $from, $from_addr, $cc="", $bcc="") {
 		$txt
 		);
 
-	$headers = "MIME-Version: 1.0\n"
-		 ."Content-type: text/html; charset: UTF-8\n"
-		 ."From: ".$from."<".$from_addr.">\n"
-		 ."Reply-To: ".$from_addr."\n"
-		 ."Return-Path: ".$from_addr."\n"
-		 ."X-Mailer: PHP/".phpversion()."\n";
+	$headers[] = "From: " . $from . "<" . $from_addr . ">";
 	if ($cc)
-		$headers .= "Cc: ".$cc."\n";
+		$headers[] = "Cc: " . $cc;
 	if ($bcc)
-		$headers .= "Bcc: ".$bcc."\n";
-	return mail($to, $subject,	$txt, $headers); //, "-f".$from_addr);
-	//return mail($to, $subject,	$txt, $headers, "-f".$from_addr);
+		$headers[] = "Bcc: " . $bcc;
+	return wp_mail($to, $subject,	$txt, $headers);
 }
 
 
@@ -74,76 +69,5 @@ function st_checkmail($email) {
 	}
 }
 
-
-// image utility
-// =============================================================================
-
-function get_home_path_alternative() {
-	$home = get_option( 'home' );
-	$siteurl = get_option( 'siteurl' );
-	if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
-		$wp_path_rel_to_home = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
-		$pos = strripos( str_replace( '\\', '/', $_SERVER['SCRIPT_FILENAME'] ), trailingslashit( $wp_path_rel_to_home ) );
-		$home_path = substr( $_SERVER['SCRIPT_FILENAME'], 0, $pos );
-		$home_path = trailingslashit( $home_path );
-	} else {
-		$home_path = ABSPATH;
-	}
-
-	return str_replace( '\\', '/', $home_path );
-}
-
-
-function get_size_component() {
-	global $image_sizes;
-
-	foreach (get_intermediate_image_sizes() as $s ){
-		$image_sizes[ $s ] = array( 0, 0 );
-		if( in_array( $s, array( 'thumbnail', 'medium', 'large' ) ) ){
-			$image_sizes[ $s ][0] = get_option( $s . '_size_w' );
-			$image_sizes[ $s ][1] = get_option( $s . '_size_h' );
-		}
-	}
-}
-
-add_action('init', 'get_size_component');
-
-function filter_sizes ($img) {
-	global $image_sizes;
-
-	$original_img = $img;
-	$img = str_replace(site_url(), "", $img);
-
-	if (!isset($_COOKIE['width_screen'])) {
-		$size = "medium";
-	}
-	else {
-		$size = (in_array($_COOKIE['width_screen'], array("thumbnail", "medium", "large"))) ? $_COOKIE['width_screen'] : "medium";
-	}
-
-	if ($size == "large") {
-		return $img;
-	}
-
-	$component = "-" . implode("x", $image_sizes[$size]);
-
-	$parts = explode("/", $img);
-	$final_parts = explode (".", $parts[count($parts) - 1]);
-
-	$parts[count($parts) - 1] = $final_parts[0] . $component . "." . $final_parts[1];
-
-	$img = implode("/", $parts);
-
-	$path_img = str_replace('//', '/', get_home_path_alternative() . $img);
-
-	if (file_exists($path_img)) {
-		$img = site_url() . $img;
-	}
-	else {
-		$img = $original_img;
-	}
-
-	return $img;
-}
 
 ?>

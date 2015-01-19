@@ -10,7 +10,7 @@ module.exports = function(grunt) {
                   join: true
                 },
                 files: {
-                  'assets/js/coffee.js': ['assets/js/*.coffee'] // concat then compile into single file
+                  'js/vendor/coffee.js': ['coffee/*.coffee'] // concat then compile into single file
                 }
             },
             compileAdmin: {
@@ -18,7 +18,7 @@ module.exports = function(grunt) {
                   join: true
                 },
                 files: {
-                  'js/admin.js': ['assets/js/admin/*.coffee'] // concat then compile into single file
+                  'js/admin.js': ['coffee/admin/*.coffee'] // concat then compile into single file
                 }
             },
         },
@@ -26,8 +26,7 @@ module.exports = function(grunt) {
         concat: {   
             dist: {
                 src: [
-                    'assets/js/vendor/*.js',
-                    'assets/js/*.js'
+                    'js/vendor/*.js'
                 ],
                 dest: 'js/production.js',
             }
@@ -40,24 +39,13 @@ module.exports = function(grunt) {
             }
         },
 
-        imagemin: {
-            dynamic: {
-                files: [{
-                    expand: true,
-                    cwd: 'assets/images/',
-                    src: ['**/*.{png,jpg,gif}'],
-                    dest: 'img/'
-                }]
-            }
-        },
-
         sass: {
             dist: {
                 options: {
                     style: 'compressed'
                 },
                 files: {
-                    'css/production.css': 'assets/css/main.scss'
+                    'css/production.css': 'sass/main.scss'
                 }
             } 
         },
@@ -67,14 +55,14 @@ module.exports = function(grunt) {
                 livereload: true,
             },
             scripts: {
-                files: ['assets/js/*.js', 'assets/js/*.coffee', 'assets/js/admin/*.coffee'],
+                files: ['coffee/*.js', 'coffee/*.coffee', 'coffee/admin/*.coffee'],
                 tasks: ['coffee', 'concat', 'uglify'],
                 options: {
                     spawn: false,
                 },
             },
             css: {
-                files: ['assets/css/*.scss', 'assets/css/vendor/bootstrap/*.scss'],
+                files: ['sass/*.scss', 'sass/vendor/bootstrap/*.scss'],
                 tasks: ['sass'],
                 options: {
                     spawn: false,
@@ -88,11 +76,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-sass');
 
     // "Grunt" actions
-    grunt.registerTask('default', ['coffee', 'concat', 'uglify', 'imagemin', 'sass']);
+    grunt.registerTask('default', ['coffee', 'concat', 'uglify', 'sass']);
 
 };
