@@ -3,7 +3,7 @@
 // Set paths
 // =============================================================================
 $template_directory = get_template_directory();
-$functions_path 	= $template_directory . '/functions/';
+$functions_path 	= $template_directory . '/core/functions/';
 
 // =============================================================================
 // Require Files
@@ -32,5 +32,5 @@ foreach ($files as $file) {
 	require_once($file);
 }
 
-add_filter( 'allowed_http_origin', '__return_true' )
+add_filter( 'allowed_http_origin', '__return_true' );
 ?>

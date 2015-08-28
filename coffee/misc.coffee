@@ -12,3 +12,10 @@ unless String.linkify
 	    # Email addresses
 	    emailAddressPattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/g
 	    @replace(urlPattern, "<a href=\"$&\">$&</a>").replace(pseudoUrlPattern, "$1<a href=\"http://$2\">$2</a>").replace emailAddressPattern, "<a href=\"mailto:$&\">$&</a>"
+
+# http://stackoverflow.com/questions/1418050/string-strip-for-javascript
+###########################################################################################
+if typeof String::trim == 'undefined'
+
+  String::trim = ->
+    String(this).replace /^\s+|\s+$/g, ''

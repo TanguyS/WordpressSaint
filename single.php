@@ -4,7 +4,7 @@
 // template file for articles
 // =============================================================================
 
-get_partial('header');
+get_part('header');
 
-get_partial('footer');
+get_part('footer');
 ?>

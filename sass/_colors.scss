@@ -3,9 +3,11 @@
    background
    ========================================================================== */
 
-.light-background { background-color: #ffffff; }
+.white-background { background-color: #ffffff; }
 
-.dark-background { background-color: #0d0d0d; }
+.yellow-background { background-color: #ffff00; }
+
+.black-background { background-color: #000000; }
 
 
 
@@ -13,9 +15,11 @@
    background
    ========================================================================== */
 
-.light-border { border-color: #cccccc; }
+.white-border { border-color: #cccccc; }
 
-.dark-border { border-color: #0d0d0d; }
+.yellow-border { border-color: #ffff00; }
+
+.black-border { border-color: #0d0d0d; }
 
 
 
@@ -25,16 +29,21 @@
 
 html, 
 body, 
-.dark {
-	color: #0d0d0d;
+.black {
+	color: #000000;
 }
 
 $elts: div, a, p, h1, h2, h3, h4, h5, span, input, select;
 
 @each $el in $elts {
-	#{$el}.light,
-   .light #{$el} { 
+	#{$el}.white,
+   .white #{$el} { 
       color: #ffffff;
+   }
+
+   #{$el}.yellow,
+   .yellow #{$el} { 
+      color: #ffff00;
    }
 
    #{$el}.lighter-dark,
@@ -42,10 +51,18 @@ $elts: div, a, p, h1, h2, h3, h4, h5, span, input, select;
       color: #515151;
    }
 
-   #{$el}.dark,
-   .dark #{$el} { 
-      color: #0d0d0d;
+   #{$el}.black,
+   .black #{$el} { 
+      color: #000000;
    }
+}
+
+a.white:hover {
+   color: #ffffff;
+}
+
+a.black:hover {
+   color: #000000;
 }
 
 

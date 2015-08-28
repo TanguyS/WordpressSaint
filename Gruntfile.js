@@ -1,3 +1,7 @@
+var pngquant = require('imagemin-pngquant');
+var mozjpeg  = require('imagemin-mozjpeg');
+var gifsicle = require('imagemin-gifsicle');
+
 module.exports = function(grunt) {
 
     // Config
@@ -10,23 +14,15 @@ module.exports = function(grunt) {
                   join: true
                 },
                 files: {
-                  'js/vendor/coffee.js': ['coffee/*.coffee'] // concat then compile into single file
+                  'js/vendor/coffee.js': ['coffee/*.coffee', 'coffee/**/*.coffee'] // concat then compile into single file
                 }
-            },
-            compileAdmin: {
-                options: {
-                  join: true
-                },
-                files: {
-                  'js/admin.js': ['coffee/admin/*.coffee'] // concat then compile into single file
-                }
-            },
+            }
         },
 
         concat: {   
             dist: {
                 src: [
-                    'js/vendor/*.js'
+                    ['js/vendor/*.js', 'js/vendor/**/*.js']
                 ],
                 dest: 'js/production.js',
             }
@@ -49,20 +45,36 @@ module.exports = function(grunt) {
                 }
             } 
         },
+        
+        imagemin:{
+            target: {
+                options: {
+                    optimizationLevel: 3,
+                    progressive: true,
+                    use: [pngquant({quality: '5-75', speed: 1}), mozjpeg(), gifsicle()]
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'img/',
+                    src: ['**/*.{png,jpg,jpeg,gif}'],
+                    dest: 'images/'
+                }]
+            }
+        },
 
         watch: {
             options: {
                 livereload: true,
             },
             scripts: {
-                files: ['coffee/*.js', 'coffee/*.coffee', 'coffee/admin/*.coffee'],
+                files: ['coffee/*.coffee', 'coffee/**/*.coffee'],
                 tasks: ['coffee', 'concat', 'uglify'],
                 options: {
                     spawn: false,
                 },
             },
             css: {
-                files: ['sass/*.scss', 'sass/vendor/bootstrap/*.scss'],
+                files: ['sass/*.scss'],
                 tasks: ['sass'],
                 options: {
                     spawn: false,
@@ -78,8 +90,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
 
     // "Grunt" actions
-    grunt.registerTask('default', ['coffee', 'concat', 'uglify', 'sass']);
+    grunt.registerTask('default', ['coffee', 'concat', 'uglify', 'sass', 'imagemin']);
 
 };

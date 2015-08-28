@@ -25,17 +25,39 @@ jQuery(document).ready ($) ->
 
 	fillHeight = ->
 		$("[data-fillH]").each ->
+			$(this).css
+				height: "auto"
+
 			less = 0
-			if ($(this).attr("data-hLess").length isnt 0) 
+			if $(this).attr("data-hLess") isnt undefined
 				less = parseInt($(this).attr("data-hLess"))
 
 			hei = $(this).attr("data-fillH")
 
-			$(this).css("min-height", (window.screenHeight * hei / 100) - less)
+			futureHeight = (window.screenHeight * hei / 100) - less
+
+			if $(this).attr("data-fillHMethod") isnt undefined && $(this).attr("data-fillHMethod") is "hard"
+				$(this).css
+					height: futureHeight
+
+				return
+			
+
+			innerHeight = $(this).height()
+
+			margins = 100
+
+			if innerHeight > futureHeight
+				futureHeight = innerHeight + margins * 2
+				$(this).css
+					height: futureHeight
+			else
+				$(this).css
+					height: futureHeight
+
 			return
 
-	fillHeight()
-	$(window).on "resize orientationchange", ->
+	$(window).on "resize siteReady orientationchange documentHeightChanged articleOpen", ->
 		fillHeight()
 
 
@@ -93,130 +115,43 @@ jQuery(document).ready ($) ->
 
 		return
 
-
-
-	# video and audio sizing
-	###########################################################################################
-
-	videoSizes = ->
-
-		if $(".wp-video").length isnt 0
-			if $(".wp-video").parents(".backgroundVideo").length is 0
-				# full case
-				$(".wp-video").css 
-					width: window.screenWidth,
-					height: window.screenWidth * 9 / 16
-			else
-				# background case, center video in div
-				$wrapper = $(".wp-video").parents(".backgroundVideo")
-				wrapperWidth = $wrapper.width()
-				wrapperHeight = $wrapper.height()
-
-				futureWidth = window.screenWidth
-				futureHeight = window.screenWidth * 9 / 16
-
-				over = futureWidth / futureHeight
-				under = futureHeight / futureWidth
-
-				if wrapperWidth / wrapperHeight >= over
-				  $(".wp-video").css
-				  	# maxWidth: "none",
-				    width: wrapperWidth + "px"
-				    height: Math.ceil(under * wrapperWidth) + "px"
-				    marginLeft: "0px"
-				    marginTop: Math.abs((under * wrapperWidth) - wrapperHeight) / -2 + "px"
-
-				else
-				  $(".wp-video").css
-				    width: Math.ceil(over * wrapperHeight) + "px"
-				    height: wrapperHeight + "px"
-				    marginTop: "0px"
-				    marginLeft: Math.abs((over * wrapperHeight) - wrapperWidth) / -2 + "px",
-				    maxWidth: "none"
-				    
-
-			$("video").css 
-				width: "100%",
-				height: "100%"
-
-		if $(".wp-audio").length isnt 0
-			$(".wp-audio").css 
-				width: window.screenWidth,
-				height: "50px"				
-
-			$("audio").css 
-				width: "100%",
-				height: "100%"
-
-
-	videoSizes()
-	$(window).on "resize orientationchange", ->
-		videoSizes()
-
-
-
-	# Slider
-	# =============================================================================
-	fade = 750
-	if ($(".slider-data").length isnt 0)
-
-		$(".slider-data").each ->
-			target = $(this).attr "data-target"
-
-			if (typeof target isnt "undefined")
-				sliderImages = []
-				$(this).find("img").each ->
-					sliderImages.push $(this).attr("src")
-
-				if (sliderImages.length > 0)
-					$("#" + target).backstretch sliderImages,
-					  	duration: 3000
-					  	fade: fade
-
-				return
-			return
-
-
-
-	# center vertically
+	# distribute children
 	# ===========================================================================
 
-	centerVertically = () ->
-		$("[data-centerVertically]").each () ->
-			minMargins = parseInt( $(this).attr("data-centerVertically") )
+	distributeChildren = () ->
+		$("[data-distribute-children]").each () ->
+			selector = $(this).attr("data-distribute-children")
 
-			if ($(this).find(".center").length is 0)
-				$(this).wrapInner("<div class='center clearfix relative' />")
+			heightToCopy = $(this).parent().children(selector).height()
 
-			h = $(this).find(".center").height()
-			if (h == 0)
-				$(this).find(".center").children().each () ->
-					h += $(this).height()
-					return
-				$(this).find(".center").css "height", h
+			heightElem = 0
+			$(this).children().each ->
+				heightElem += $(this).height()
 
-			rH = $(this).height()
+				return
 
-			margins = (rH - h) / 2
+			elementsLen = $(this).children().length
 
-			if margins >= minMargins
-				$(this).css
-					paddingTop: margins
-					paddingBottom: margins
-			else
-				$(this).css
-					paddingTop: minMargins
-					paddingBottom: minMargins
+			return if elementsLen is 1
+
+			futurePadding = (heightToCopy - heightElem ) / ( elementsLen - 1)
+			
+			$(this).children().css
+				paddingBottom: futurePadding
+
+			$(this).children().last().css
+				paddingBottom: 0
 
 			return
 
 		return
 
-	centerVertically()
+	distributeChildren()
 	$(window).on "resize orientationchange", () ->
-		centerVertically()
+		distributeChildren()
 
 		return
+	
 
 
 	# center
@@ -236,6 +171,7 @@ jQuery(document).ready ($) ->
 		absoluteCentered()
 
 		return
+
 
 	# height based on inner elements
 	# ===========================================================================
@@ -272,13 +208,13 @@ jQuery(document).ready ($) ->
 
 			max = parseInt( $(this).attr("data-maxW") )
 
-			if $(this).width() + max > $(window).width()
-				$(this).css "width", ($(window).width() - max)
+			if $(this).width() + max > window.screenWidth
+				$(this).css "width", (window.screenWidth - max)
 			else
 				if $(window).width() - max > baseW
 					$(this).css "width", baseW
 				else
-					$(this).css "width", ($(window).width() - max)
+					$(this).css "width", (window.screenWidth - max)
 
 			return
 
@@ -295,8 +231,8 @@ jQuery(document).ready ($) ->
 	# show and hide on click
 	# ===========================================================================
 
-	$("[data-toggleFade]").each () ->
-		toggleTarget = $(this).data("toggleFade")
+	$("[data-toggle]").each () ->
+		toggleTarget = $(this).data("toggle")
 
 		$(this).click () ->
 			if $(toggleTarget).is(":visible")
@@ -358,61 +294,13 @@ jQuery(document).ready ($) ->
 		return
 
 
-	# dropdown on hover
-	###########################################################################################
-	$(".dropdown").each () ->
-		h = $(this).children().first().outerHeight() - 3
-
-		$(this).css
-			height: h
-			overflow: "hidden"
-			display: "block"
-
-		return
-
-	$(document).on "mouseenter", ".dropdown", () ->
-		innerHeight = $(this).children().length * $(this).children().first().outerHeight() - 3
-
-		$(this).stop(true, true).animate
-			height: innerHeight
-		, 300, "easeInOutQuint"
-
-		return
-
-	$(document).on "mouseleave", ".dropdown", () ->
-		firstH = $(this).children().first().outerHeight() - 3
-
-		$(this).stop(true, true).animate
-			height: firstH
-		, 300, "easeInOutQuint"
-
-		return
-
-	$(document).on "click", ".dropdown", () ->
-		firstH = $(this).children().first().outerHeight() - 3
-
-		if $(this).height() == firstH
-			innerHeight = $(this).children().length * ($(this).children().first().outerHeight() - 3)
-
-			$(this).stop(true, true).animate
-				height: innerHeight
-			, 300, "easeInOutQuint"
-		else
-			$(this).stop(true, true).animate
-				height: firstH
-			, 300, "easeInOutQuint"
-
-
-		return
-
-
 
 	# fill width
 	###########################################################################################
 
 	fillWidth = () ->
 		$("[data-fillW]").each () ->
-			w = $(window).width() * parseInt($(this).attr("data-fillW")) / 100
+			w = window.screenWidth * parseInt($(this).attr("data-fillW")) / 100
 
 			$(this).css
 				width: w
@@ -439,6 +327,4 @@ jQuery(document).ready ($) ->
 				return
 			return
 
-			
-	
 	return
