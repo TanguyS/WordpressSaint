@@ -3,7 +3,7 @@
 // Set paths
 // =============================================================================
 $template_directory = get_template_directory();
-$functions_path 	= $template_directory . '/core/functions/';
+$functions_path 	= $template_directory . '/functions/';
 
 // =============================================================================
 // Require Files
